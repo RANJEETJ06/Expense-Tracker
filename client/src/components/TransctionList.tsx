@@ -1,12 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Transaction } from "./../utils/AllInterface";
 
 interface TransctionListProps {
   transactions: Transaction[];
+  userId: number;
 }
-const TransctionList: React.FC<TransctionListProps> = ({ transactions }) => {
+const TransctionList: React.FC<TransctionListProps> = ({
+  transactions,
+  userId,
+}) => {
   const navigate = useNavigate();
-  const { userId } = useParams();
   return (
     <div>
       <h3 className="text-lg font-semibold mb-2">Transaction History</h3>
@@ -24,7 +27,8 @@ const TransctionList: React.FC<TransctionListProps> = ({ transactions }) => {
                 className="border px-4 py-2 cursor-pointer"
                 onClick={() =>
                   navigate(
-                    `/${userId}/${transaction.transactionId}/Transaction`
+                    `/Transaction`,
+                    { state: { userId, transaction } }
                   )
                 }
               >

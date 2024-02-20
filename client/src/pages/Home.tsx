@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import ChartDispaly from "../components/ChartDispaly";
 import TransctionList from "../components/TransctionList";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { apiCall } from "../utils/apiCall";
 import { Category, Transaction, User } from "../utils/AllInterface";
 import { LoadingContext } from "../Layout";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const { state } = useLocation();
+  const userId = state.userId;
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [editingBudget, setEditingBudget] = useState<boolean>(false);
 
@@ -30,26 +31,23 @@ const Home: React.FC = () => {
     email: "",
     budget: 0,
   });
-  const [editedBudget, setEditedBudget] = useState<number>(user.budget); 
+  const [editedBudget, setEditedBudget] = useState<number>(user.budget);
   const { setLoading } = useContext(LoadingContext);
   let updatedBudget = budget;
   useEffect(() => {
-    let allTranactions;
     const fetchData = async () => {
       try {
-        const allCategories = await apiCall(
-          "/api/category/categories?pageNumber=0&pageSize=6",
-          "get"
-        );
+        const [allCategories, user, transactions] = await Promise.all([
+          apiCall("/api/category/categories?pageNumber=0&pageSize=6", "get"),
+          apiCall(`/api/users/${userId}/`, "get"),
+          apiCall(`/api/transaction/${userId}/`, "get"),
+        ]);
+
         setCategories(allCategories);
-        const user = await apiCall(`/api/users/${userId}/`, "get");
         setUser(user);
         setBudget(user.budget);
-        const transactions = await apiCall(
-          `/api/transaction/${userId}/`,
-          "get"
-        );
-        allTranactions = await Promise.all(
+
+        const allTransactions = await Promise.all(
           transactions.map(async (transaction: any) => {
             const cat = await apiCall(
               `/api/category/get/${transaction.transactionId}/`,
@@ -62,14 +60,15 @@ const Home: React.FC = () => {
             return { ...transaction, category };
           })
         );
-        setTransactions(allTranactions);
-        setBudget(updatedBudget);
+        setTransactions(allTransactions);
+        setBudget(user.budget);
       } catch (error) {
-        navigate('/*')
+        navigate("/*");
       }
     };
+
     fetchData();
-  }, [userId, setLoading, updatedBudget,navigate]);
+  }, [userId, navigate]);
 
   const handleAddTransaction = async () => {
     const trimmedDescription: string = newTransactionDescription.trim();
@@ -119,12 +118,12 @@ const Home: React.FC = () => {
     if (!isNaN(parseFloat(budget.toString()))) {
       try {
         const Budget = editedBudget;
-        setBudget(editedBudget)
+        setBudget(editedBudget);
         const data = await apiCall(`/api/users/${userId}/${Budget}/`, `put`);
-        console.log(data);
+        setBudget(data.budget);
         setEditingBudget(false);
       } catch (error) {
-        navigate('/*')
+        navigate("/*");
       }
     }
   };
@@ -151,7 +150,9 @@ const Home: React.FC = () => {
               </label>
               <p
                 contentEditable
-                onBlur={(e) => setEditedBudget(parseFloat(e.currentTarget.innerText))} // Update edited budget value when the <p> tag loses focus
+                onBlur={(e) =>
+                  setEditedBudget(parseFloat(e.currentTarget.innerText))
+                }
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               >
                 {budget}
@@ -253,7 +254,7 @@ const Home: React.FC = () => {
 
         <button
           className="bg-blue-500 text-white py-2 px-4 rounded-md mb-4 hover:bg-blue-600 mr-1"
-          onClick={() => navigate(`/${userId}/Budget`)}
+          onClick={() => navigate(`/Budget`, { state: { userId: userId } })}
         >
           Monthly track
         </button>
@@ -267,7 +268,9 @@ const Home: React.FC = () => {
             : "Show Transaction History"}
         </button>
 
-        {showHistory && <TransctionList transactions={transactions} />}
+        {showHistory && (
+          <TransctionList transactions={transactions} userId={userId} />
+        )}
       </div>
       <div className="flex flex-wrap justify-center basis-2/5 mr-12">
         {transactions.length !== 0 && (

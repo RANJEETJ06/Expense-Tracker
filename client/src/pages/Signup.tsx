@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiCall } from "../utils/apiCall";
 import { LoadingContext } from "../Layout";
@@ -26,7 +26,7 @@ const SignUp = () => {
       return;
     }
     try {
-      setLoading(true)
+      setLoading(true);
       const data = await apiCall(`/api/users/`, "post", {
         userName,
         email,
@@ -34,13 +34,13 @@ const SignUp = () => {
       });
       if (data) {
         const userId = data.userId;
-        navigate(`/${userId}/Dashboard`);
+        navigate(`/Dashboard`, { state: { userId } });
       }
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       setError("");
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 

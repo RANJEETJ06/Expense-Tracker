@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { apiCall } from "../utils/apiCall";
 
 const TransactionDetails = () => {
-  const { userId, transactionId } = useParams();
+  const { state } = useLocation();
+  const userId = state.userId;
+  const transactionId = state.transaction.transactionId;
   const navigate = useNavigate();
   const [desc, setDesc] = useState("");
   const [money, setMoney] = useState(0);
@@ -52,7 +54,7 @@ const TransactionDetails = () => {
       </div>
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded-md mb-4 hover:bg-blue-600 mt-6"
-        onClick={() => navigate(`/${userId}/Dashboard`)}
+        onClick={() => navigate(`/Dashboard`, { state: { userId } })}
       >
         Back
       </button>

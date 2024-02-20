@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const MonthBudget: React.FC = () => {
-  const { userId } = useParams();
+  const { state } = useLocation();
+  const userId = state.userId;
   const navigate = useNavigate();
   const chartRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -65,7 +66,7 @@ const MonthBudget: React.FC = () => {
       <canvas ref={chartRef} width="400" height="200"></canvas>
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded-md mb-4 hover:bg-blue-600 mt-6"
-        onClick={() => navigate(`/${userId}/Dashboard`)}
+        onClick={() => navigate(`/Dashboard`, { state: { userId: userId } })}
       >
         Back
       </button>

@@ -18,10 +18,10 @@ function App() {
             <Route path="/Login" element={<Login />} />
             <Route path="/Signup" element={<Signup />} />
             <Route path="/*" element={<NotFound />} />
-            <Route path="/:userId/Dashboard" element={<Home />} />
-            <Route path="/:userId/Budget" element={<MonthBudget />} />
+            <Route path="/Dashboard" element={<Home />} />
+            <Route path="/Budget" element={<MonthBudget />} />
             <Route
-              path="/:userId/:transactionId/Transaction"
+              path="/Transaction"
               element={<TransactionDetails />}
             />
           </Routes>

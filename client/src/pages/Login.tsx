@@ -19,16 +19,16 @@ const Login = () => {
       });
       if (data.success) {
         const userId = data.id;
-        navigate(`/${userId}/Dashboard`);
+        navigate(`/Dashboard`, { state: { userId: userId } });
       } else {
         setError("Invalid credentials");
       }
     } catch (error) {
       setError("An error occurred during login");
-      navigate('/*')
+      navigate("/*");
     }
     setTimeout(() => {
-      setLoading(false); // Set loading to false after some time (simulating loading)
+      setLoading(false);
     }, 2000);
   };
 
