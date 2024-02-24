@@ -9,16 +9,14 @@ interface LoadingContextType {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const LoadingContext = React.createContext<LoadingContextType>({
-  setLoading: () => {}, // Provide a default function to prevent undefined error
+  setLoading: () => {},
 });
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   if (loading) {
-    return (
-      <Loading/>
-    );
+    return <Loading />;
   }
 
   return (
