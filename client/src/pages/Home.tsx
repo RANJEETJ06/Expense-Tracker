@@ -63,7 +63,7 @@ const Home: React.FC = () => {
         setTransactions(allTransactions);
         setBudget(user.budget);
       } catch (error) {
-        navigate("/*");
+        navigate("/*", { state: { message: "Data fetch failed" } });
       }
     };
 
@@ -123,7 +123,7 @@ const Home: React.FC = () => {
         setBudget(data.budget);
         setEditingBudget(false);
       } catch (error) {
-        navigate("/*");
+        navigate("/*", { state: { message: "Budget update failed" } });
       }
     }
   };

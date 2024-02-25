@@ -11,7 +11,8 @@ const SignUp = () => {
   const navigate = useNavigate();
   const { setLoading } = useContext(LoadingContext);
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e: any) => {
+    e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Invalid email address");
@@ -32,6 +33,10 @@ const SignUp = () => {
         email,
         password,
       });
+      if (data[409] === "User already exists") {
+        navigate(`/*`, { state: { message: "User already exists" } });
+        return;
+      }
       if (data) {
         const userId = data.userId;
         navigate(`/Dashboard`, { state: { userId } });
@@ -43,7 +48,6 @@ const SignUp = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="container mx-auto">
       <div className="max-w-md mx-auto bg-white p-8 border border-gray-300 rounded-md shadow-md">

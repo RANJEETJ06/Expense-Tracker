@@ -25,7 +25,7 @@ const Login = () => {
       }
     } catch (error) {
       setError("An error occurred during login");
-      navigate("/*");
+      navigate("/*", { state: { message: "An error occurred during login" } });
     }
     setTimeout(() => {
       setLoading(false);

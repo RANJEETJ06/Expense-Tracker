@@ -14,7 +14,11 @@ export const apiCall = async (endpoint: string, method: string, body?: {}) => {
   try {
     const response = await axios(config);
     return response.data;
-  } catch (error) {
-    console.log("API Call Failed");
+  } catch (error: any) {
+    if (error.response.status === 409) {
+      return { 409: "User already exists" };
+    } else {
+      console.log("API Call Failed");
+    }
   }
 };

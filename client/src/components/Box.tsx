@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import user from '../image/user.png';
+import user from "../image/user.png";
 interface BoxProps {
   field1?: string;
   field2?: string;
@@ -11,7 +11,7 @@ const Box: React.FC<BoxProps> = ({ field1, field2 }) => {
       <div className="flex">
         <div className="avatar">
           <div className="w-24 rounded-full">
-            <img src={user} alt="User Avatar" className="bg-blue-500"/>
+            <img src={user} alt="User Avatar" className="bg-blue-500" />
           </div>
         </div>
       </div>

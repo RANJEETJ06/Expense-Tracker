@@ -23,6 +23,9 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
         UserDto CreatedUserDto=this.userService.createUser(userDto);
+        if(CreatedUserDto.getUserId()==null){
+            return new ResponseEntity<>(null,HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(CreatedUserDto, HttpStatus.CREATED);
     }
 

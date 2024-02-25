@@ -4,6 +4,7 @@ import com.expense.blog.server.configuration.AppConstants;
 import com.expense.blog.server.entities.Role;
 import com.expense.blog.server.entities.User;
 import com.expense.blog.server.exception.ResourcesNotFoundException;
+import com.expense.blog.server.exception.UserAlreadyExistException;
 import com.expense.blog.server.payloads.UserDto;
 import com.expense.blog.server.repositories.RoleRepo;
 import com.expense.blog.server.repositories.UserRepo;
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService {
     private RoleRepo repoRole;
     @Override
     public UserDto createUser(UserDto userDto) {
+        if(this.userRepo.findByEmail(userDto.getEmail()).isPresent()|| this.userRepo.findByUserName(userDto.getUserName()).isPresent() ){
+            return userDto;
+        }
         User user=this.userDtoToUser(userDto);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         Role role=this.repoRole.findById(AppConstants.NORMAL_USER).get();
