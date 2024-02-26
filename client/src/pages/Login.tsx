@@ -23,7 +23,7 @@ const Login = () => {
       } else {
         setError("Invalid credentials");
       }
-    } catch (error) {
+    } catch (error: any) {
       setError("An error occurred during login");
       navigate("/*", { state: { message: "An error occurred during login" } });
     }

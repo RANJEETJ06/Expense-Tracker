@@ -34,7 +34,7 @@ public class AuthController {
         UserDto user= this.modelMapper.map(this.userRepo.findByEmail(username),UserDto.class);
         if (user != null) {
             if (this.passwordEncoder.matches(password,user.getPassword())) {
-                return new ResponseEntity<>(new ApiResponse("Login successful", true,user.getUserId()), HttpStatus.CREATED);
+                return new ResponseEntity<>(new ApiResponse("Login successful", true,user.getUserId()), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ApiResponse("Incorrect password", false,null), HttpStatus.FORBIDDEN);
             }
